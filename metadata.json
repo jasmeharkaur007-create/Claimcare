@@ -1,0 +1,6 @@
+{
+  "name": "ClaimCare",
+  "description": "Simple Claims. Faster Settlements. Insurance Claim Processing Portal for submitting, tracking, and managing insurance claims.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — ClaimCare</title>
+  <meta name="description" content="Create a demo policyholder account on ClaimCare to submit and track insurance claims." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/main.js" defer></script>
+  <script src="js/auth.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand-logo" aria-label="ClaimCare Home">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <span>ClaimCare</span>
+      </a>
+
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#about">About Us</a></li>
+          <li><a href="index.html#services">Services</a></li>
+          <li><a href="track-claim.html">Track Claim</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions" id="publicNavActions">
+        <a href="login.html" class="btn btn--secondary btn--sm">Login</a>
+        <a href="register.html" class="btn btn--primary btn--sm">Register</a>
+      </div>
+
+      <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileDrawer" aria-label="Toggle navigation menu">
+        &#9776;
+      </button>
+    </div>
+
+    <div class="mobile-drawer" id="mobileDrawer">
+      <ul class="mobile-drawer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#about">About Us</a></li>
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="track-claim.html">Track Claim</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <div class="mobile-drawer-actions" id="mobileNavActions">
+        <a href="login.html" class="btn btn--secondary btn--sm">Login</a>
+        <a href="register.html" class="btn btn--primary btn--sm">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Create Your Account</h1>
+        <p>Register as a policyholder to submit and track insurance claims online.</p>
+      </div>
+
+      <div class="notice notice--navy">
+        <span class="notice-title">Demo Registration Notice</span>
+        Account details are stored locally in your browser via LocalStorage for demonstration only.
+      </div>
+
+      <div id="registerNotice" class="notice hidden" role="status" aria-live="polite"></div>
+
+      <form id="registerForm" novalidate>
+        <div class="form-group">
+          <label for="regFullName" class="form-label">Full Name <span class="required-mark">*</span></label>
+          <input type="text" id="regFullName" class="form-control" placeholder="e.g. Riya Verma" required />
+          <span class="field-error" id="errFullName"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="regEmail" class="form-label">Email Address <span class="required-mark">*</span></label>
+          <input type="email" id="regEmail" class="form-control" placeholder="riya@example.com" required />
+          <span class="field-error" id="errRegEmail"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="regPhone" class="form-label">Phone Number <span class="required-mark">*</span></label>
+          <input type="tel" id="regPhone" class="form-control" placeholder="+91 98765 43210" required />
+          <span class="field-error" id="errPhone"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="regPassword" class="form-label">Password <span class="required-mark">*</span></label>
+          <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required />
+          <span class="field-error" id="errRegPassword"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="regConfirmPassword" class="form-label">Confirm Password <span class="required-mark">*</span></label>
+          <input type="password" id="regConfirmPassword" class="form-control" placeholder="Re-enter password" required />
+          <span class="field-error" id="errConfirmPassword"></span>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--full" style="margin-top: 8px;">Register</button>
+      </form>
+
+      <div class="auth-footer-links">
+        <span>Already have an account? <a href="login.html"><strong>Login</strong></a></span>
+        <a href="index.html">Back to Home</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

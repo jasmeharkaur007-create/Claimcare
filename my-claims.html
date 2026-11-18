@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Claims — ClaimCare</title>
+  <meta name="description" content="View, search, filter, and sort all submitted insurance claims on ClaimCare." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/main.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/claims.js" defer></script>
+</head>
+<body>
+  <div class="portal-layout">
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <aside class="sidebar" id="portalSidebar" aria-label="Portal Navigation">
+      <div class="sidebar-top">
+        <div class="sidebar-header">
+          <a href="index.html" class="brand-logo brand-logo--inverse">
+            <span class="brand-mark" aria-hidden="true">C</span>
+            <span>ClaimCare</span>
+          </a>
+          <button type="button" class="sidebar-close" id="sidebarCloseBtn" aria-label="Close navigation">&times;</button>
+        </div>
+
+        <ul class="sidebar-nav">
+          <li><a href="dashboard.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9635;</span><span>Dashboard</span></a></li>
+          <li><a href="submit-claim.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">+</span><span>Submit New Claim</span></a></li>
+          <li><a href="my-claims.html" class="sidebar-link active"><span class="sidebar-glyph" aria-hidden="true">&#9776;</span><span>My Claims</span></a></li>
+          <li><a href="track-claim.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#8594;</span><span>Track Claim</span></a></li>
+          <li><a href="documents.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9636;</span><span>Documents</span></a></li>
+          <li><a href="profile.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9679;</span><span>Profile</span></a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user-meta">
+          <strong data-user-name>Policyholder</strong>
+          <span data-user-role>Customer Account</span>
+        </div>
+        <button type="button" class="sidebar-link" data-action="logout">
+          <span class="sidebar-glyph" aria-hidden="true">&#8617;</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <div class="portal-main">
+      <header class="portal-topbar">
+        <div class="portal-topbar-left">
+          <button type="button" class="nav-toggle" id="sidebarOpenBtn" aria-label="Open menu">&#9776;</button>
+          <h1 class="portal-page-title">My Claims</h1>
+        </div>
+        <div class="portal-topbar-right">
+          <span class="portal-user-label">Signed in as <strong data-user-name>User</strong></span>
+          <a href="submit-claim.html" class="btn btn--primary btn--sm">Submit New Claim</a>
+        </div>
+      </header>
+
+      <main class="portal-content">
+        <div class="page-intro">
+          <div>
+            <h2>Submitted Claims History</h2>
+            <p>Search by Claim ID, filter by insurance category or status, and inspect full claim records.</p>
+          </div>
+          <span class="form-hint tabular" id="myClaimsCount">0 claims</span>
+        </div>
+
+        <section class="panel">
+          <div class="filter-bar">
+            <div class="form-group">
+              <label for="claimsSearchInput" class="form-label">Search by Claim ID</label>
+              <input type="search" id="claimsSearchInput" class="form-control" placeholder="e.g. CLM1001 or policy number" />
+            </div>
+
+            <div class="form-group">
+              <label for="claimsTypeFilter" class="form-label">Insurance Type</label>
+              <select id="claimsTypeFilter" class="form-control">
+                <option value="all">All Insurance Types</option>
+                <option value="Health Insurance">Health Insurance</option>
+                <option value="Vehicle Insurance">Vehicle Insurance</option>
+                <option value="Life Insurance">Life Insurance</option>
+                <option value="Property Insurance">Property Insurance</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="claimsStatusFilter" class="form-label">Claim Status</label>
+              <select id="claimsStatusFilter" class="form-control">
+                <option value="all">All Statuses</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Documents Required">Documents Required</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Settled">Settled</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="claimsSortOrder" class="form-label">Sort by Date</label>
+              <select id="claimsSortOrder" class="form-control">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrap" id="myClaimsTableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Claim ID</th>
+                  <th>Insurance Type</th>
+                  <th>Claim Amount</th>
+                  <th>Submission Date</th>
+                  <th>Status</th>
+                  <th>View Details</th>
+                </tr>
+              </thead>
+              <tbody id="myClaimsTableBody"></tbody>
+            </table>
+          </div>
+
+          <div id="myClaimsEmpty" class="empty-state hidden">
+            <p>No claims match your current search or filter selection.</p>
+            <a href="submit-claim.html" class="btn btn--primary btn--sm">Submit New Claim</a>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Claim Details Modal -->
+  <div id="claimDetailsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="claimModalHeading">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="claimModalHeading">Claim Details</h3>
+        <button type="button" id="closeClaimDetailsModal" class="modal-close" aria-label="Close modal">&times;</button>
+      </div>
+      <div id="claimDetailsBody"></div>
+      <div class="modal-footer">
+        <a href="track-claim.html" id="modalTrackLink" class="btn btn--primary btn--sm">Track Progress</a>
+        <button type="button" id="closeClaimDetailsFooter" class="btn btn--secondary btn--sm">Close</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

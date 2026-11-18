@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — ClaimCare</title>
+  <meta name="description" content="View and update your policyholder contact information and demo password on ClaimCare." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/main.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/claims.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+</head>
+<body>
+  <div class="portal-layout">
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <aside class="sidebar" id="portalSidebar" aria-label="Portal Navigation">
+      <div class="sidebar-top">
+        <div class="sidebar-header">
+          <a href="index.html" class="brand-logo brand-logo--inverse">
+            <span class="brand-mark" aria-hidden="true">C</span>
+            <span>ClaimCare</span>
+          </a>
+          <button type="button" class="sidebar-close" id="sidebarCloseBtn" aria-label="Close navigation">&times;</button>
+        </div>
+
+        <ul class="sidebar-nav">
+          <li><a href="dashboard.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9635;</span><span>Dashboard</span></a></li>
+          <li><a href="submit-claim.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">+</span><span>Submit New Claim</span></a></li>
+          <li><a href="my-claims.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9776;</span><span>My Claims</span></a></li>
+          <li><a href="track-claim.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#8594;</span><span>Track Claim</span></a></li>
+          <li><a href="documents.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9636;</span><span>Documents</span></a></li>
+          <li><a href="profile.html" class="sidebar-link active"><span class="sidebar-glyph" aria-hidden="true">&#9679;</span><span>Profile</span></a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user-meta">
+          <strong data-user-name>Policyholder</strong>
+          <span data-user-role>Customer Account</span>
+        </div>
+        <button type="button" class="sidebar-link" data-action="logout">
+          <span class="sidebar-glyph" aria-hidden="true">&#8617;</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <div class="portal-main">
+      <header class="portal-topbar">
+        <div class="portal-topbar-left">
+          <button type="button" class="nav-toggle" id="sidebarOpenBtn" aria-label="Open menu">&#9776;</button>
+          <h1 class="portal-page-title">User Profile</h1>
+        </div>
+        <div class="portal-topbar-right">
+          <span class="portal-user-label">Signed in as <strong data-user-name>User</strong></span>
+          <a href="dashboard.html" class="btn btn--secondary btn--sm">Dashboard</a>
+        </div>
+      </header>
+
+      <main class="portal-content">
+        <div class="page-intro">
+          <div>
+            <h2>Personal &amp; Contact Information</h2>
+            <p>Keep your contact details accurate so claim updates and settlement notices reach you promptly.</p>
+          </div>
+        </div>
+
+        <section class="panel">
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Account ID</span>
+              <span class="detail-value tabular" id="profileAccountId">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Account Role</span>
+              <span class="detail-value" id="profileAccountRole">Policyholder</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Member Since</span>
+              <span class="detail-value tabular" id="profileCreatedAt">-</span>
+            </div>
+          </div>
+
+          <div id="profileNotice" class="notice hidden" role="status" aria-live="polite"></div>
+
+          <form id="profileForm" novalidate>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="profileFullName" class="form-label">Full Name <span class="required-mark">*</span></label>
+                <input type="text" id="profileFullName" class="form-control" readonly required />
+              </div>
+              <div class="form-group">
+                <label for="profileEmail" class="form-label">Email Address <span class="required-mark">*</span></label>
+                <input type="email" id="profileEmail" class="form-control" readonly required />
+              </div>
+              <div class="form-group">
+                <label for="profilePhone" class="form-label">Phone Number <span class="required-mark">*</span></label>
+                <input type="tel" id="profilePhone" class="form-control" readonly required />
+              </div>
+              <div class="form-group">
+                <label for="profileAddress" class="form-label">Address <span class="required-mark">*</span></label>
+                <input type="text" id="profileAddress" class="form-control" readonly required />
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" id="editProfileBtn" class="btn btn--primary">Edit Profile</button>
+              <button type="submit" id="saveProfileBtn" class="btn btn--primary hidden">Save Changes</button>
+              <button type="button" id="cancelProfileBtn" class="btn btn--secondary hidden">Cancel</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel" aria-labelledby="changePasswordHeading">
+          <div class="panel-header">
+            <h3 class="panel-title" id="changePasswordHeading">Update Demo Password</h3>
+          </div>
+          <div id="passwordNotice" class="notice hidden" role="status" aria-live="polite"></div>
+          <form id="changePasswordForm" novalidate>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="currentPassword" class="form-label">Current Password <span class="required-mark">*</span></label>
+                <input type="password" id="currentPassword" class="form-control" required />
+              </div>
+              <div class="form-group">
+                <label for="newPassword" class="form-label">New Password (min 6 chars) <span class="required-mark">*</span></label>
+                <input type="password" id="newPassword" class="form-control" required />
+              </div>
+              <div class="form-group form-group--full">
+                <label for="confirmNewPassword" class="form-label">Confirm New Password <span class="required-mark">*</span></label>
+                <input type="password" id="confirmNewPassword" class="form-control" required />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn--navy">Update Password</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documents — ClaimCare</title>
+  <meta name="description" content="View, download verification receipts, and upload additional supporting documents for your claims." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/main.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/claims.js" defer></script>
+</head>
+<body>
+  <div class="portal-layout">
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <aside class="sidebar" id="portalSidebar" aria-label="Portal Navigation">
+      <div class="sidebar-top">
+        <div class="sidebar-header">
+          <a href="index.html" class="brand-logo brand-logo--inverse">
+            <span class="brand-mark" aria-hidden="true">C</span>
+            <span>ClaimCare</span>
+          </a>
+          <button type="button" class="sidebar-close" id="sidebarCloseBtn" aria-label="Close navigation">&times;</button>
+        </div>
+
+        <ul class="sidebar-nav">
+          <li><a href="dashboard.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9635;</span><span>Dashboard</span></a></li>
+          <li><a href="submit-claim.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">+</span><span>Submit New Claim</span></a></li>
+          <li><a href="my-claims.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9776;</span><span>My Claims</span></a></li>
+          <li><a href="track-claim.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#8594;</span><span>Track Claim</span></a></li>
+          <li><a href="documents.html" class="sidebar-link active"><span class="sidebar-glyph" aria-hidden="true">&#9636;</span><span>Documents</span></a></li>
+          <li><a href="profile.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9679;</span><span>Profile</span></a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user-meta">
+          <strong data-user-name>Policyholder</strong>
+          <span data-user-role>Customer Account</span>
+        </div>
+        <button type="button" class="sidebar-link" data-action="logout">
+          <span class="sidebar-glyph" aria-hidden="true">&#8617;</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <div class="portal-main">
+      <header class="portal-topbar">
+        <div class="portal-topbar-left">
+          <button type="button" class="nav-toggle" id="sidebarOpenBtn" aria-label="Open menu">&#9776;</button>
+          <h1 class="portal-page-title">Document Management</h1>
+        </div>
+        <div class="portal-topbar-right">
+          <span class="portal-user-label">Signed in as <strong data-user-name>User</strong></span>
+          <a href="submit-claim.html" class="btn btn--primary btn--sm">Submit New Claim</a>
+        </div>
+      </header>
+
+      <main class="portal-content">
+        <div class="page-intro">
+          <div>
+            <h2>Uploaded Claim Documents</h2>
+            <p>Review attached files, download local verification receipts, or upload additional requested evidence.</p>
+          </div>
+        </div>
+
+        <div class="notice notice--navy">
+          <span class="notice-title">Frontend Demo Storage Explanation</span>
+          Document records and upload metadata are stored locally in your browser via LocalStorage. Real encrypted binary file storage and server retrieval require a backend API.
+        </div>
+
+        <div id="documentsNotice" class="notice hidden" role="status" aria-live="polite"></div>
+
+        <!-- Upload Additional Document -->
+        <section class="panel" aria-labelledby="uploadDocTitle">
+          <div class="panel-header">
+            <h3 class="panel-title" id="uploadDocTitle">Upload Additional Supporting Document</h3>
+          </div>
+          <form id="uploadDocumentForm" novalidate>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="uploadDocClaimId" class="form-label">Associated Claim ID <span class="required-mark">*</span></label>
+                <select id="uploadDocClaimId" class="form-control" required></select>
+              </div>
+              <div class="form-group">
+                <label for="uploadDocType" class="form-label">Document Type <span class="required-mark">*</span></label>
+                <select id="uploadDocType" class="form-control" required>
+                  <option value="Identity Proof">Identity Proof</option>
+                  <option value="Insurance Policy Document">Insurance Policy Document</option>
+                  <option value="Supporting Evidence">Supporting Evidence</option>
+                  <option value="Medical Bills">Medical Bills</option>
+                  <option value="Repair Bills">Repair Bills</option>
+                  <option value="Additional Requested Document">Additional Requested Document</option>
+                </select>
+              </div>
+              <div class="form-group form-group--full">
+                <label for="uploadDocFile" class="form-label">Select File (PDF, JPG, JPEG, PNG — max 5 MB) <span class="required-mark">*</span></label>
+                <input type="file" id="uploadDocFile" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn--primary">Upload Document</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Uploaded Documents Table -->
+        <section class="panel" aria-labelledby="documentsListTitle">
+          <div class="panel-header">
+            <h3 class="panel-title" id="documentsListTitle">Document Records</h3>
+          </div>
+
+          <div class="table-wrap" id="documentsTableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Document Name</th>
+                  <th>Associated Claim ID</th>
+                  <th>Upload Date</th>
+                  <th>Document Type</th>
+                  <th>File Size</th>
+                  <th>View / Download</th>
+                </tr>
+              </thead>
+              <tbody id="documentsTableBody"></tbody>
+            </table>
+          </div>
+
+          <div id="documentsEmpty" class="empty-state hidden">
+            <p>No document records found for your account.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Document View Modal -->
+  <div id="documentViewModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="docModalHeading">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="docModalHeading">Document Record Details</h3>
+        <button type="button" id="closeDocumentViewModal" class="modal-close" aria-label="Close modal">&times;</button>
+      </div>
+      <div id="documentViewBody"></div>
+    </div>
+  </div>
+</body>
+</html>

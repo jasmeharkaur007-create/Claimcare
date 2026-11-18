@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Console — ClaimCare</title>
+  <meta name="description" content="ClaimCare Administrator Dashboard for reviewing, approving, rejecting, and managing insurance claims." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/main.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/admin.js" defer></script>
+</head>
+<body>
+  <div class="portal-layout">
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <aside class="sidebar" id="portalSidebar" aria-label="Admin Navigation">
+      <div class="sidebar-top">
+        <div class="sidebar-header">
+          <a href="index.html" class="brand-logo brand-logo--inverse">
+            <span class="brand-mark" aria-hidden="true">C</span>
+            <span>ClaimCare</span>
+          </a>
+          <button type="button" class="sidebar-close" id="sidebarCloseBtn" aria-label="Close navigation">&times;</button>
+        </div>
+
+        <ul class="sidebar-nav">
+          <li><button type="button" class="sidebar-link active" data-admin-view="overview"><span class="sidebar-glyph" aria-hidden="true">&#9635;</span><span>Overview</span></button></li>
+          <li><button type="button" class="sidebar-link" data-admin-view="all"><span class="sidebar-glyph" aria-hidden="true">&#9776;</span><span>All Claims</span></button></li>
+          <li><button type="button" class="sidebar-link" data-admin-view="pending"><span class="sidebar-glyph" aria-hidden="true">&#8987;</span><span>Pending Claims</span></button></li>
+          <li><button type="button" class="sidebar-link" data-admin-view="approved"><span class="sidebar-glyph" aria-hidden="true">&#10003;</span><span>Approved Claims</span></button></li>
+          <li><button type="button" class="sidebar-link" data-admin-view="rejected"><span class="sidebar-glyph" aria-hidden="true">&times;</span><span>Rejected Claims</span></button></li>
+          <li><button type="button" class="sidebar-link" data-admin-view="users"><span class="sidebar-glyph" aria-hidden="true">&#9679;</span><span>Users</span></button></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user-meta">
+          <strong data-user-name>Administrator</strong>
+          <span data-user-role>Admin Console</span>
+        </div>
+        <button type="button" class="sidebar-link" data-action="logout">
+          <span class="sidebar-glyph" aria-hidden="true">&#8617;</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <div class="portal-main">
+      <header class="portal-topbar">
+        <div class="portal-topbar-left">
+          <button type="button" class="nav-toggle" id="sidebarOpenBtn" aria-label="Open menu">&#9776;</button>
+          <h1 class="portal-page-title">Admin Claim Processing Console</h1>
+        </div>
+        <div class="portal-topbar-right">
+          <span class="portal-user-label">Signed in as <strong data-user-name>Admin</strong></span>
+          <a href="track-claim.html" class="btn btn--secondary btn--sm">Track View</a>
+        </div>
+      </header>
+
+      <main class="portal-content">
+        <!-- Access Wall when not signed in as Admin -->
+        <section id="adminAccessWall" class="panel hidden">
+          <h2>Administrator Sign-In Required</h2>
+          <p>This Administrator Console is a frontend simulation. Sign in with the demo administrator account to review and process claims.</p>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="button" id="switchToDemoAdminBtn" class="btn btn--primary">Sign In as Demo Admin (Vikram Mehta)</button>
+            <a href="login.html" class="btn btn--secondary">Go to Login Page</a>
+          </div>
+        </section>
+
+        <!-- Main Admin Workspace -->
+        <div id="adminWorkspace">
+          <div class="notice notice--navy">
+            <span class="notice-title">Frontend Simulation Notice</span>
+            Administrator claim decisions, document requests, and remarks update browser LocalStorage immediately and reflect on the customer dashboard and claim tracking page.
+          </div>
+
+          <div id="adminNotice" class="notice hidden" role="status" aria-live="polite"></div>
+
+          <!-- Summary KPI Cards -->
+          <section class="kpi-grid" aria-label="Admin Claim Summary">
+            <div class="kpi-card">
+              <span class="kpi-label">Total Claims Received</span>
+              <span class="kpi-value tabular" id="adminStatTotal">0</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-label">Claims Under Review</span>
+              <span class="kpi-value tabular" id="adminStatReview">0</span>
+            </div>
+            <div class="kpi-card kpi-card--accent">
+              <span class="kpi-label">Approved Claims</span>
+              <span class="kpi-value tabular" id="adminStatApproved">0</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-label">Rejected Claims</span>
+              <span class="kpi-value tabular" id="adminStatRejected">0</span>
+            </div>
+          </section>
+
+          <!-- Claims Table Section -->
+          <section class="panel" id="adminClaimsSection">
+            <div class="panel-header">
+              <h2 class="panel-title" id="adminViewHeading">All Received Claims</h2>
+            </div>
+
+            <div class="filter-bar filter-bar--3">
+              <div class="form-group">
+                <label for="adminSearchInput" class="form-label">Search Claims</label>
+                <input type="search" id="adminSearchInput" class="form-control" placeholder="Claim ID, customer name, or policy number" />
+              </div>
+
+              <div class="form-group">
+                <label for="adminTypeFilter" class="form-label">Filter by Insurance Type</label>
+                <select id="adminTypeFilter" class="form-control">
+                  <option value="all">All Insurance Types</option>
+                  <option value="Health Insurance">Health Insurance</option>
+                  <option value="Vehicle Insurance">Vehicle Insurance</option>
+                  <option value="Life Insurance">Life Insurance</option>
+                  <option value="Property Insurance">Property Insurance</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="adminStatusFilter" class="form-label">Filter by Status</label>
+                <select id="adminStatusFilter" class="form-control">
+                  <option value="all">All Statuses</option>
+                  <option value="Submitted">Submitted</option>
+                  <option value="Under Review">Under Review</option>
+                  <option value="Documents Required">Documents Required</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="Settled">Settled</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-wrap" id="adminClaimsWrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Claim ID</th>
+                    <th>Customer Name</th>
+                    <th>Policy Number</th>
+                    <th>Insurance Type</th>
+                    <th>Claim Amount</th>
+                    <th>Submission Date</th>
+                    <th>Current Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="adminClaimsTableBody"></tbody>
+              </table>
+            </div>
+
+            <div id="adminClaimsEmpty" class="empty-state hidden">
+              <p>No claims match the selected filters.</p>
+            </div>
+          </section>
+
+          <!-- Users Directory Section -->
+          <section class="panel hidden" id="adminUsersSection">
+            <div class="panel-header">
+              <h2 class="panel-title">Registered Policyholders &amp; Administrators</h2>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Claims Filed</th>
+                    <th>Joined</th>
+                  </tr>
+                </thead>
+                <tbody id="adminUsersTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Admin Claim Processing Modal -->
+  <div id="adminProcessModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="adminModalTitle">Review &amp; Process Claim</h3>
+        <button type="button" id="closeAdminModal" class="modal-close" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div id="adminProcessBody"></div>
+
+      <form id="adminProcessForm" style="margin-top: 18px;" novalidate>
+        <input type="hidden" id="adminEditClaimId" />
+
+        <div class="form-group" style="margin-bottom: 14px;">
+          <span class="form-label">Quick Decisions</span>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <button type="button" class="btn btn--primary btn--sm" data-quick-status="Approved">Approve Claim</button>
+            <button type="button" class="btn btn--navy btn--sm" data-quick-status="Documents Required">Request Additional Documents</button>
+            <button type="button" class="btn btn--secondary btn--sm" data-quick-status="Rejected">Reject Claim</button>
+            <button type="button" class="btn btn--outline-teal btn--sm" data-quick-status="Settled">Mark Settled</button>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="adminEditStatus" class="form-label">Update Claim Status <span class="required-mark">*</span></label>
+            <select id="adminEditStatus" class="form-control" required>
+              <option value="Submitted">Submitted</option>
+              <option value="Under Review">Under Review</option>
+              <option value="Documents Required">Documents Required</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Settled">Settled</option>
+            </select>
+          </div>
+
+          <div class="form-group form-group--full">
+            <label for="adminEditRemarks" class="form-label">Internal &amp; Assessor Remarks</label>
+            <textarea id="adminEditRemarks" class="form-control" placeholder="Add assessment notes, document requests, or settlement details..."></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn--primary">Save Claim Decision</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

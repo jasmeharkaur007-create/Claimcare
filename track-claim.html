@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track Claim — ClaimCare</title>
+  <meta name="description" content="Track your insurance claim progress across all six processing stages using your Claim ID." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/main.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/claims.js" defer></script>
+</head>
+<body>
+  <!-- Public Header (Shown to guests) -->
+  <header class="site-header" id="trackPublicHeader">
+    <div class="container navbar">
+      <a href="index.html" class="brand-logo" aria-label="ClaimCare Home">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <span>ClaimCare</span>
+      </a>
+
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#about">About Us</a></li>
+          <li><a href="index.html#services">Services</a></li>
+          <li><a href="track-claim.html" class="active">Track Claim</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions" id="publicNavActions">
+        <a href="login.html" class="btn btn--secondary btn--sm">Login</a>
+        <a href="register.html" class="btn btn--primary btn--sm">Register</a>
+      </div>
+
+      <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileDrawer" aria-label="Toggle navigation menu">
+        &#9776;
+      </button>
+    </div>
+
+    <div class="mobile-drawer" id="mobileDrawer">
+      <ul class="mobile-drawer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#about">About Us</a></li>
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="track-claim.html">Track Claim</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <div class="mobile-drawer-actions" id="mobileNavActions">
+        <a href="login.html" class="btn btn--secondary btn--sm">Login</a>
+        <a href="register.html" class="btn btn--primary btn--sm">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <div id="trackLayoutWrapper">
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- Portal Sidebar (Shown when logged in) -->
+    <aside class="sidebar hidden" id="portalSidebar" aria-label="Portal Navigation">
+      <div class="sidebar-top">
+        <div class="sidebar-header">
+          <a href="index.html" class="brand-logo brand-logo--inverse">
+            <span class="brand-mark" aria-hidden="true">C</span>
+            <span>ClaimCare</span>
+          </a>
+          <button type="button" class="sidebar-close" id="sidebarCloseBtn" aria-label="Close navigation">&times;</button>
+        </div>
+
+        <ul class="sidebar-nav">
+          <li><a href="dashboard.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9635;</span><span>Dashboard</span></a></li>
+          <li><a href="submit-claim.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">+</span><span>Submit New Claim</span></a></li>
+          <li><a href="my-claims.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9776;</span><span>My Claims</span></a></li>
+          <li><a href="track-claim.html" class="sidebar-link active"><span class="sidebar-glyph" aria-hidden="true">&#8594;</span><span>Track Claim</span></a></li>
+          <li><a href="documents.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9636;</span><span>Documents</span></a></li>
+          <li><a href="profile.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9679;</span><span>Profile</span></a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user-meta">
+          <strong data-user-name>Policyholder</strong>
+          <span data-user-role>Customer Account</span>
+        </div>
+        <button type="button" class="sidebar-link" data-action="logout">
+          <span class="sidebar-glyph" aria-hidden="true">&#8617;</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <div class="portal-main">
+      <header class="portal-topbar hidden" id="trackPortalTopbar">
+        <div class="portal-topbar-left">
+          <button type="button" class="nav-toggle" id="sidebarOpenBtn" aria-label="Open menu">&#9776;</button>
+          <h1 class="portal-page-title">Track Insurance Claim</h1>
+        </div>
+        <div class="portal-topbar-right">
+          <span class="portal-user-label">Signed in as <strong data-user-name>User</strong></span>
+          <a href="my-claims.html" class="btn btn--secondary btn--sm">My Claims</a>
+        </div>
+      </header>
+
+      <main class="portal-content" style="margin: 0 auto;">
+        <div class="page-intro">
+          <div>
+            <h2>Claim Status &amp; Stage Tracker</h2>
+            <p>Enter any valid Claim ID to inspect verification milestones, current status, and assessor remarks.</p>
+          </div>
+        </div>
+
+        <section class="panel">
+          <form id="trackClaimForm" class="quick-track-form" style="margin-bottom: 14px;" novalidate>
+            <label for="trackClaimInput" class="sr-only">Claim ID</label>
+            <input type="text" id="trackClaimInput" class="form-control" placeholder="Enter Claim ID (e.g. CLM1001)" />
+            <button type="submit" class="btn btn--primary">Track Claim</button>
+          </form>
+
+          <div class="sample-id-row" style="margin-bottom: 0; padding-bottom: 0; border-bottom: none;">
+            <span>Try sample Claim IDs:</span>
+            <button type="button" class="sample-id-btn tabular" data-track-id="CLM1001">CLM1001</button>
+            <button type="button" class="sample-id-btn tabular" data-track-id="CLM1002">CLM1002</button>
+            <button type="button" class="sample-id-btn tabular" data-track-id="CLM1003">CLM1003</button>
+            <button type="button" class="sample-id-btn tabular" data-track-id="CLM1004">CLM1004</button>
+            <button type="button" class="sample-id-btn tabular" data-track-id="CLM1005">CLM1005</button>
+            <button type="button" class="sample-id-btn tabular" data-track-id="CLM1006">CLM1006</button>
+          </div>
+        </section>
+
+        <div id="trackNotice" class="notice hidden" role="status" aria-live="polite"></div>
+
+        <section id="trackResultCard" class="panel hidden" aria-live="polite">
+          <div class="panel-header">
+            <h3 class="panel-title">Claim Summary</h3>
+            <span class="status-text status-text--teal" id="trkCurrentStatus">Under Review</span>
+          </div>
+
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Claim ID</span>
+              <span class="detail-value tabular" id="trkClaimId">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Policy Number</span>
+              <span class="detail-value tabular" id="trkPolicyNumber">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Claim Type</span>
+              <span class="detail-value" id="trkClaimType">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Submission Date</span>
+              <span class="detail-value tabular" id="trkSubmissionDate">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Claim Amount</span>
+              <span class="detail-value tabular" id="trkClaimAmount">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Last Updated Date</span>
+              <span class="detail-value tabular" id="trkLastUpdated">-</span>
+            </div>
+          </div>
+
+          <h4 class="form-section-title">6-Stage Processing Progress</h4>
+          <div class="tracker-shell">
+            <ol class="tracker-steps" id="trackerStepsList"></ol>
+          </div>
+
+          <div class="notice notice--teal" style="margin-top: 22px;">
+            <span class="notice-title">Status Explanation</span>
+            <p id="trkExplanation" style="margin-bottom: 0;"></p>
+          </div>
+
+          <div class="notice notice--navy" style="margin-bottom: 0;">
+            <span class="notice-title">Latest Assessor Remarks</span>
+            <p id="trkRemarks" style="margin-bottom: 0;"></p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

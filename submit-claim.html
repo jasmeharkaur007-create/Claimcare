@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit New Claim — ClaimCare</title>
+  <meta name="description" content="Submit a new Health, Vehicle, Life, or Property insurance claim online with ClaimCare." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/main.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/claims.js" defer></script>
+</head>
+<body>
+  <div class="portal-layout">
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <aside class="sidebar" id="portalSidebar" aria-label="Portal Navigation">
+      <div class="sidebar-top">
+        <div class="sidebar-header">
+          <a href="index.html" class="brand-logo brand-logo--inverse">
+            <span class="brand-mark" aria-hidden="true">C</span>
+            <span>ClaimCare</span>
+          </a>
+          <button type="button" class="sidebar-close" id="sidebarCloseBtn" aria-label="Close navigation">&times;</button>
+        </div>
+
+        <ul class="sidebar-nav">
+          <li><a href="dashboard.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9635;</span><span>Dashboard</span></a></li>
+          <li><a href="submit-claim.html" class="sidebar-link active"><span class="sidebar-glyph" aria-hidden="true">+</span><span>Submit New Claim</span></a></li>
+          <li><a href="my-claims.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9776;</span><span>My Claims</span></a></li>
+          <li><a href="track-claim.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#8594;</span><span>Track Claim</span></a></li>
+          <li><a href="documents.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9636;</span><span>Documents</span></a></li>
+          <li><a href="profile.html" class="sidebar-link"><span class="sidebar-glyph" aria-hidden="true">&#9679;</span><span>Profile</span></a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user-meta">
+          <strong data-user-name>Policyholder</strong>
+          <span data-user-role>Customer Account</span>
+        </div>
+        <button type="button" class="sidebar-link" data-action="logout">
+          <span class="sidebar-glyph" aria-hidden="true">&#8617;</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <div class="portal-main">
+      <header class="portal-topbar">
+        <div class="portal-topbar-left">
+          <button type="button" class="nav-toggle" id="sidebarOpenBtn" aria-label="Open menu">&#9776;</button>
+          <h1 class="portal-page-title">Submit New Insurance Claim</h1>
+        </div>
+        <div class="portal-topbar-right">
+          <span class="portal-user-label">Signed in as <strong data-user-name>User</strong></span>
+          <a href="my-claims.html" class="btn btn--secondary btn--sm">My Claims</a>
+        </div>
+      </header>
+
+      <main class="portal-content">
+        <div class="page-intro">
+          <div>
+            <h2>New Claim Application</h2>
+            <p>Complete all required policyholder, policy, incident, and document sections below.</p>
+          </div>
+        </div>
+
+        <div id="draftNotice" class="notice notice--teal hidden">
+          <span class="notice-title">Saved Draft Available</span>
+          <p>You have an unfinished claim draft saved locally in this browser.</p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" id="loadDraftBtn" class="btn btn--primary btn--sm">Load Saved Draft</button>
+            <button type="button" id="discardDraftBtn" class="btn btn--secondary btn--sm">Discard Draft</button>
+          </div>
+        </div>
+
+        <div id="submitClaimNotice" class="notice hidden" role="status" aria-live="polite"></div>
+
+        <section class="panel">
+          <form id="submitClaimForm" novalidate>
+            <!-- Section 1: Personal Information -->
+            <div class="form-section">
+              <h3 class="form-section-title">1. Personal Information</h3>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="claimFullName" class="form-label">Full Name <span class="required-mark">*</span></label>
+                  <input type="text" id="claimFullName" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label for="claimEmail" class="form-label">Email Address <span class="required-mark">*</span></label>
+                  <input type="email" id="claimEmail" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label for="claimPhone" class="form-label">Phone Number <span class="required-mark">*</span></label>
+                  <input type="tel" id="claimPhone" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label for="claimAddress" class="form-label">Address <span class="required-mark">*</span></label>
+                  <input type="text" id="claimAddress" class="form-control" required />
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2: Insurance Information -->
+            <div class="form-section">
+              <h3 class="form-section-title">2. Insurance Information</h3>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="policyNumber" class="form-label">Policy Number <span class="required-mark">*</span></label>
+                  <input type="text" id="policyNumber" class="form-control" placeholder="e.g. POL-HLT-40219" required />
+                </div>
+                <div class="form-group">
+                  <label for="insuranceType" class="form-label">Insurance Type <span class="required-mark">*</span></label>
+                  <select id="insuranceType" class="form-control" required>
+                    <option value="Health Insurance">Health Insurance</option>
+                    <option value="Vehicle Insurance">Vehicle Insurance</option>
+                    <option value="Life Insurance">Life Insurance</option>
+                    <option value="Property Insurance">Property Insurance</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="policyStartDate" class="form-label">Policy Start Date <span class="required-mark">*</span></label>
+                  <input type="date" id="policyStartDate" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label for="policyExpiryDate" class="form-label">Policy Expiry Date <span class="required-mark">*</span></label>
+                  <input type="date" id="policyExpiryDate" class="form-control" required />
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 3: Claim Information -->
+            <div class="form-section">
+              <h3 class="form-section-title">3. Claim Information</h3>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="claimType" class="form-label">Claim Type <span class="required-mark">*</span></label>
+                  <input type="text" id="claimType" class="form-control" placeholder="e.g. Hospitalization, Collision Repair, Fire Damage" required />
+                </div>
+                <div class="form-group">
+                  <label for="incidentDate" class="form-label">Date of Incident <span class="required-mark">*</span></label>
+                  <input type="date" id="incidentDate" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label for="incidentLocation" class="form-label">Incident Location <span class="required-mark">*</span></label>
+                  <input type="text" id="incidentLocation" class="form-control" placeholder="City, Hospital, or Highway location" required />
+                </div>
+                <div class="form-group">
+                  <label for="claimAmount" class="form-label">Claim Amount (₹) <span class="required-mark">*</span></label>
+                  <input type="number" id="claimAmount" class="form-control tabular" min="1" step="1" placeholder="e.g. 45000" required />
+                </div>
+                <div class="form-group form-group--full">
+                  <label for="incidentDescription" class="form-label">Description of Incident <span class="required-mark">*</span></label>
+                  <textarea id="incidentDescription" class="form-control" placeholder="Provide clear details about the incident, cause, and itemized loss..." required></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 4: Document Upload -->
+            <div class="form-section">
+              <h3 class="form-section-title">4. Document Upload</h3>
+              <p class="form-hint" style="margin-bottom: 14px;">Accepted formats: PDF, JPG, JPEG, PNG (maximum 5 MB per file). File metadata is recorded in LocalStorage for this frontend demo.</p>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="docIdentity" class="form-label">Identity Proof <span class="required-mark">*</span></label>
+                  <input type="file" id="docIdentity" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required />
+                </div>
+                <div class="form-group">
+                  <label for="docPolicy" class="form-label">Insurance Policy Document <span class="required-mark">*</span></label>
+                  <input type="file" id="docPolicy" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required />
+                </div>
+                <div class="form-group">
+                  <label for="docEvidence" class="form-label">Supporting Evidence</label>
+                  <input type="file" id="docEvidence" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
+                </div>
+                <div class="form-group">
+                  <label for="docBills" id="billsDocLabel" class="form-label">Medical Bills / Repair Bills</label>
+                  <input type="file" id="docBills" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn--primary">Submit Claim</button>
+              <button type="button" id="saveDraftBtn" class="btn btn--navy">Save as Draft</button>
+              <button type="button" id="resetClaimBtn" class="btn btn--secondary">Reset Form</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
